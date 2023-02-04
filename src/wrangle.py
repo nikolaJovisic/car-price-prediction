@@ -33,9 +33,23 @@ df.drop(
         "broj oglasa:",  # no information is contained here
         "broj sasije:",  # no information is contained here
         "datum postavke:",  # all data with known date posted in the last 2 days, so not much info here, scraping
-        # date will be used as an equvivalent for this
+        # date will be used as an equivalent for this
         "ostecenje",  # all data points in one class
         "stanje:",  # just one class left
+        'plivajuci zamajac',  # weakly relevant columns or insufficient diversity
+        'vlasnistvo',
+        'atestiran',
+        'datum obnove:',
+        'kredit',
+        'beskamatni kredit',
+        'lizing',
+        'gotovinska uplata',
+        'broj rata',
+        'visina rate',
+        'ucesce (depozit)',
+        'nacin prodaje',
+        'u ponudi od:',
+        'boja enterijera'
     ],
     inplace=True,
 )
