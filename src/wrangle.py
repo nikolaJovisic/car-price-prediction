@@ -28,7 +28,7 @@ df.drop(
     columns=[
         "broj oglasa:",  # no information is contained here
         "broj sasije:",  # no information is contained here
-        "datum postavke: ",  # all data with known date posted in the last 2 days, so not much info here
+        "datum postavke:",  # all data with known date posted in the last 2 days, so not much info here
         "ostecenje",  # all data points in one class
         "stanje:",  # just one class left
     ],
