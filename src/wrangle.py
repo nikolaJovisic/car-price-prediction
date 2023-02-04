@@ -28,6 +28,8 @@ df.drop(
     columns=[
         "broj oglasa:",  # no information is contained here
         "broj sasije:",  # no information is contained here
+        "datum postavke:",  # all data with known date posted in the last 2 days, so not much info here, scraping
+        # date will be used as an equvivalent for this
         "ostecenje",  # all data points in one class
         "stanje:",  # just one class left
     ],
@@ -38,7 +40,6 @@ df['godiste'] = df['godiste'].map(lambda year: int(year[:-1]))
 df['kilometraza'] = df['kilometraza'].map(lambda distance: int(re.sub("[^0-9]", "", distance)))
 df['kubikaza'] = df['kubikaza'].map(lambda volume: int(re.sub("[^0-9]", "", volume)))
 df['snaga motora'] = df['snaga motora'].map(lambda power: int(power.split('/')[0]))  # only one unit (kw) is needed
-df['datum postavke:'] = df['datum postavke:'].map(lambda datum: days_between(datum, SCRAPING_DATE))
 
 for column in df:
     print(column)
