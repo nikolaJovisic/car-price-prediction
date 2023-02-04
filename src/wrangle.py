@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import re
 from utils import days_between
-from sklearn.decomposition import PCA
+import prince
 
 
 SCRAPING_DAY_STR = "31.1.2023."
@@ -94,10 +94,14 @@ model = pd.get_dummies(df['model'])
 df.drop(columns=['model'], inplace=True)
 manufacturer = manufacturer.join(model)
 
-pca = PCA(n_components=30)
-a = pca.fit_transform(manufacturer)
-b = pca.transform(manufacturer)
-c = pca.components_
+mca = prince.MCA(n_components=187)
+mca = mca.fit(manufacturer)
+transformed = mca.transform(manufacturer)
+
+# pca = PCA(n_components=30)
+# a = pca.fit_transform(manufacturer)
+# b = pca.transform(manufacturer)
+# c = pca.components_
 
 
 
