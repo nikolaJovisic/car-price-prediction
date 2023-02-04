@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import re
 from utils import days_between
+from sklearn.decomposition import PCA
+
 
 SCRAPING_DAY_STR = "31.1.2023."
 SCRAPING_MONTH_STR = ".".join(
@@ -82,7 +84,26 @@ df["registrovan do"] = df["registrovan do"].map(
 )
 df.rename(columns={"registrovan do": "registrovan dana"}, inplace=True)
 
+df['emisiona klasa motora'] = df['emisiona klasa motora'].map(lambda euro: int(euro[-1]) if isinstance(euro, str) else 4)
 
+manufacturer = pd.get_dummies(df['marka'])
+df.drop(columns=['marka'], inplace=True)
+df = df.join(manufacturer)
+
+model = pd.get_dummies(df['model'])
+df.drop(columns=['model'], inplace=True)
+manufacturer = manufacturer.join(model)
+
+pca = PCA(n_components=30)
+a = pca.fit_transform(manufacturer)
+b = pca.transform(manufacturer)
+c = pca.components_
+
+
+
+# manufacturer = pd.get_dummies(df['marka'])
+# df.drop(columns=['marka'], inplace=True)
+# df = df.join(manufacturer)
 
 for column in df:
     print(column)
