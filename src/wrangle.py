@@ -14,6 +14,10 @@ for filename in os.scandir("../data/textual"):
             | {"oprema": len(datum["oprema"])}
             | {"cena": datum["cena"]}
         )
-data = pd.DataFrame(data)
+df = pd.DataFrame(data)
+
+for column in df:
+    print(column)
+    print(df[column].unique())
 
 print(data)
