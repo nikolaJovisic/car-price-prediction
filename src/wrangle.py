@@ -78,7 +78,7 @@ df["broj sedista"] = df["broj sedista"].map(lambda seats: int(seats.split(" ")[0
 df["registrovan do"] = df["registrovan do"].map(
     lambda date: 0
     if date == "nije registrovan"
-    else days_between(SCRAPING_DAY_STR, f"{15.}{date}")
+    else max(0, days_between(SCRAPING_DAY_STR, f"{15.}{date}"))
 )
 df.rename(columns={"registrovan do": "registrovan dana"}, inplace=True)
 
