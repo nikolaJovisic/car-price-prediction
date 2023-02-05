@@ -90,9 +90,9 @@ df["emisiona klasa motora"] = df["emisiona klasa motora"].map(
 )
 
 
-# rank = np.linalg.matrix_rank(transformed, tol=0.001)
+df = encode_columns(df, ["marka", "model"])
 
-#
+
 # for column in df:
 #     print(column)
 #     print(df[column].unique())
