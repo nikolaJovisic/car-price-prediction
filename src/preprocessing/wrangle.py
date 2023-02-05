@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import re
 
+from sklearn import preprocessing
+
 from .model_mca import encode_columns
 from .utils import days_between
 
@@ -97,6 +99,11 @@ def wrangle():
 
     label = df.pop('cena')
     df['cena'] = label
+
+    df.columns = df.columns.astype(str)
+
+    scaler = preprocessing.StandardScaler().fit(df)
+    df = scaler.transform(df)
 
     x = df.iloc[:, 0:-1]
     y = df.iloc[:, -1]
