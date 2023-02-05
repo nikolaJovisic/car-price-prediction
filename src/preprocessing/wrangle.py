@@ -93,7 +93,7 @@ def wrangle():
 
     df = encode_columns(df,
                         ["marka", "model", "karoserija", "gorivo", "fiksna cena", "zamena:", "pogon", "menjac", "klima",
-                         "materijal enterijera", "poreklo vozila", "zemlja uvoza"])
+                         "materijal enterijera", "poreklo vozila", "zemlja uvoza", "boja"])
 
     label = df.pop('cena')
     df['cena'] = label
