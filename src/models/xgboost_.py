@@ -11,7 +11,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8)
 dtrain = xgb.DMatrix(x_train, label=y_train)
 dtest = xgb.DMatrix(x_test, label=y_test)
 
-param = {'max_depth': 10, 'eta': 1, 'objective': 'reg:squarederror'}
+param = {'max_depth': 150, 'eta': 1, 'objective': 'reg:squarederror'}
 param['nthread'] = 4
 evallist = [(dtrain, 'train'), (dtest, 'eval')]
 
@@ -31,7 +31,7 @@ c_org = np.concatenate((x_test, y_org), axis=1)
 r_org = scaler.inverse_transform(c_org)
 r_org = r_org[:, -1]
 
-for i in zip(r, r_org):
-    print(i)
+diff = abs(r) - abs(r_org)
+print('Acceptable results percentage:', 100*sum(diff < 200)/len(diff))
 
 print()
