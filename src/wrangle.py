@@ -2,8 +2,9 @@ import json
 import os
 import pandas as pd
 import re
+
+from model_mca import encode_columns
 from utils import days_between
-import prince
 
 
 SCRAPING_DAY_STR = "31.1.2023."
@@ -38,20 +39,20 @@ df.drop(
         # date will be used as an equivalent for this
         "ostecenje",  # all data points in one class
         "stanje:",  # just one class left
-        'plivajuci zamajac',  # weakly relevant columns or insufficient diversity
-        'vlasnistvo',
-        'atestiran',
-        'datum obnove:',
-        'kredit',
-        'beskamatni kredit',
-        'lizing',
-        'gotovinska uplata',
-        'broj rata',
-        'visina rate',
-        'ucesce (depozit)',
-        'nacin prodaje',
-        'u ponudi od:',
-        'boja enterijera'
+        "plivajuci zamajac",  # weakly relevant columns or insufficient diversity
+        "vlasnistvo",
+        "atestiran",
+        "datum obnove:",
+        "kredit",
+        "beskamatni kredit",
+        "lizing",
+        "gotovinska uplata",
+        "broj rata",
+        "visina rate",
+        "ucesce (depozit)",
+        "nacin prodaje",
+        "u ponudi od:",
+        "boja enterijera",
     ],
     inplace=True,
 )
@@ -84,33 +85,16 @@ df["registrovan do"] = df["registrovan do"].map(
 )
 df.rename(columns={"registrovan do": "registrovan dana"}, inplace=True)
 
-df['emisiona klasa motora'] = df['emisiona klasa motora'].map(lambda euro: int(euro[-1]) if isinstance(euro, str) else 4)
-
-manufacturer = pd.get_dummies(df['marka'])
-df.drop(columns=['marka'], inplace=True)
-df = df.join(manufacturer)
-
-model = pd.get_dummies(df['model'])
-df.drop(columns=['model'], inplace=True)
-manufacturer = manufacturer.join(model)
-
-mca = prince.MCA(n_components=187)
-mca = mca.fit(manufacturer)
-transformed = mca.transform(manufacturer)
-
-# pca = PCA(n_components=30)
-# a = pca.fit_transform(manufacturer)
-# b = pca.transform(manufacturer)
-# c = pca.components_
+df["emisiona klasa motora"] = df["emisiona klasa motora"].map(
+    lambda euro: int(euro[-1]) if isinstance(euro, str) else 4
+)
 
 
+# rank = np.linalg.matrix_rank(transformed, tol=0.001)
 
-# manufacturer = pd.get_dummies(df['marka'])
-# df.drop(columns=['marka'], inplace=True)
-# df = df.join(manufacturer)
-
-for column in df:
-    print(column)
-    print(df[column].unique())
+#
+# for column in df:
+#     print(column)
+#     print(df[column].unique())
 
 print(data)
