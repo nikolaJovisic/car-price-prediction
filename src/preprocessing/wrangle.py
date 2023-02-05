@@ -108,7 +108,7 @@ def wrangle():
     x = scaled[:, :-1]
     y = scaled[:, -1]
 
-    return x, y
+    return x, y, scaler
 
 
 def main():
