@@ -90,7 +90,7 @@ df["emisiona klasa motora"] = df["emisiona klasa motora"].map(
 )
 
 
-df = encode_columns(df, ["marka", "model"])
+df = encode_columns(df, ["karoserija", "gorivo", "fiksna cena", "zamena:", "pogon", "menjac", "klima", "materijal enterijera", "poreklo vozila", "zemlja uvoza"])
 
 
 # for column in df:
