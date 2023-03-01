@@ -7,8 +7,6 @@ import xgboost as xgb
 
 df = wrangle()
 
-
-
 x = df.iloc[:, 0:-1]
 y = df.iloc[:, -1]
 
@@ -29,20 +27,7 @@ evallist = [(dtrain, 'train'), (dtest, 'eval')]
 bst = xgb.train(param, dtrain, 10, evallist)
 y = bst.predict(dtest)
 
-#
-# y_exp = np.expand_dims(y, axis=0).transpose([1, 0])
-# c = np.concatenate((x_test, y_exp), axis=1)
-
-# r = y_scaler.inverse_transform(y)
-# r = r[:, -1]
-
-# y_org = np.expand_dims(y_test, axis=0).transpose([1, 0])
-# c_org = np.concatenate((x_test, y_org), axis=1)
-#
-# r_org = scaler.inverse_transform(c_org)
-# r_org = r_org[:, -1]
-
-diff = abs(y) - abs(y_test)
-print('Acceptable results percentage:', 100*sum(diff < 200)/len(diff))
+diff = abs(y - y_test)
+print('Acceptable results percentage:', 100*sum(diff < 100)/len(diff))
 
 print()
