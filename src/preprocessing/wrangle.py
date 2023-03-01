@@ -102,13 +102,7 @@ def wrangle():
 
     df.columns = df.columns.astype(str)
 
-    scaler = preprocessing.StandardScaler().fit(df)
-    scaled = scaler.transform(df)
-
-    x = scaled[:, :-1]
-    y = scaled[:, -1]
-
-    return x, y, scaler
+    return df
 
 
 def main():
