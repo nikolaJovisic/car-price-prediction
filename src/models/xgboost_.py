@@ -16,6 +16,7 @@ x_scaler = preprocessing.MinMaxScaler().fit(x_train)
 x_train = x_scaler.transform(x_train)
 x_test = x_scaler.transform(x_test)
 
+y_train = np.log(y_train)
 
 dtrain = xgb.DMatrix(x_train, label=y_train)
 dtest = xgb.DMatrix(x_test, label=y_test)
@@ -26,6 +27,7 @@ evallist = [(dtrain, 'train'), (dtest, 'eval')]
 
 bst = xgb.train(param, dtrain, 10, evallist)
 y = bst.predict(dtest)
+y = np.exp(y)
 
 diff = abs(y - y_test)
 print('Acceptable results percentage:', 100*sum(diff < 100)/len(diff))
