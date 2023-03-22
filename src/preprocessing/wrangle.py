@@ -3,14 +3,11 @@ import os
 import pandas as pd
 import re
 
-from sklearn import preprocessing
-
 from .model_mca import encode_columns
 from .utils import days_between
 
 SCRAPING_DAY_STR = "31.1.2023."
 SCRAPING_YEAR_INT = int(SCRAPING_DAY_STR.split(".")[-2])
-
 
 def wrangle():
     """
@@ -102,7 +99,10 @@ def wrangle():
 
     df.columns = df.columns.astype(str)
 
-    return df
+    x = df.iloc[:, 0:-1]
+    y = df.iloc[:, -1]
+
+    return x, y
 
 
 def main():
