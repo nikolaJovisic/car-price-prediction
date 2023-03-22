@@ -1,14 +1,11 @@
 import numpy as np
-import pandas as pd
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from src.preprocessing.wrangle import wrangle
 import xgboost as xgb
 
-df = wrangle()
 
-x = df.iloc[:, 0:-1]
-y = df.iloc[:, -1]
+x, y = wrangle()
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8)
 
