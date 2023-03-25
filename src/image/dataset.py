@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 from torchvision.io import read_image
 
 def _read_data():
-    ROOT = "../../data"
+    ROOT = os.path.join(os.path.dirname(__file__), "../../data")
     IMAGES = os.path.join(ROOT, 'images')
     TEXTUAL = os.path.join(ROOT, 'textual')
     image_paths, labels = [], []
