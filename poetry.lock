@@ -537,6 +537,27 @@ files = [
 ]
 
 [[package]]
+name = "kornia"
+version = "0.6.11"
+description = "Open Source Differentiable Computer Vision Library for PyTorch"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "kornia-0.6.11-py2.py3-none-any.whl", hash = "sha256:97bf856ab36ddac8dd249a359da34875aaf7d960b308c50f14d69d62053bf5a2"},
+    {file = "kornia-0.6.11.tar.gz", hash = "sha256:ba77198f2c2e4044c87e4503ff277aadbfc0db20495da5a5289663f380b4be32"},
+]
+
+[package.dependencies]
+packaging = "*"
+torch = ">=1.9.1"
+
+[package.extras]
+dev = ["isort", "kornia-rs (==0.0.8)", "mypy[reports]", "numpy", "opencv-python", "pre-commit (>=2)", "pydocstyle", "pytest (==7.2.2)", "pytest-cov (==4)", "scipy"]
+docs = ["PyYAML (>=5.1)", "furo", "kornia-moons", "matplotlib", "opencv-python", "sphinx (>=4)", "sphinx-autodoc-defaultargs", "sphinx-autodoc-typehints", "sphinx-copybutton (>=0.3)", "sphinx-design", "sphinxcontrib-bibtex", "sphinxcontrib-gtagjs", "sphinxcontrib-youtube", "torchvision"]
+x = ["accelerate (==0.18.0)"]
+
+[[package]]
 name = "lit"
 version = "16.0.0"
 description = "A Software Testing Tool"
@@ -1700,4 +1721,4 @@ scikit-learn = ["scikit-learn"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "eda9ebe2bf18c9ea135af898259965e9292c223fa4207482b3f9ec390bae995d"
+content-hash = "7c891412c0db6221693ddec051334f063d87523d4bc88edb5e5ceb50f740dada"
