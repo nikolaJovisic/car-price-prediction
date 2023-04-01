@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from matplotlib.colors import hsv_to_rgb
 from matplotlib.pyplot import hsv
 
-from image.color_classifier.net import ColorClassifier
+from image.color_classifier.model import ColorClassifier, get_model
 from image.dataset import ImageDataset
 from torch import nn, squeeze, transpose
 from torch.utils.data import DataLoader, random_split
@@ -23,30 +23,38 @@ def scale_hue(image):
     image[0] /= 2 * math.pi
     return image
 
-dataset = ImageDataset(
-    transform=transforms.Compose(
-        [
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomVerticalFlip(),
-            Resize((32, 32)),
-            transforms.ConvertImageDtype(torch.float),
-            RgbToHsv(),
-            Lambda(lambd=scale_hue)
-        ]
-    )
+
+preprocessing = transforms.Compose(
+    [
+        Resize((32, 32)),
+        transforms.ConvertImageDtype(torch.float),
+        RgbToHsv(),
+        Lambda(lambd=scale_hue),
+    ]
 )
+
+augmentation = transforms.Compose(
+    [transforms.RandomHorizontalFlip(), transforms.RandomVerticalFlip()]
+)
+
+train_transform = transforms.Compose([preprocessing, augmentation])
+
+dataset = ImageDataset()
 
 train_set, test_set = random_split(dataset, lengths=(0.7, 0.3))
 
-train_loader = DataLoader(train_set, batch_size=5, shuffle=True)
-test_loader = DataLoader(test_set, batch_size=5, shuffle=True)
+train_set.dataset.transform = train_transform
+test_set.dataset.transform = preprocessing
+
+train_loader = DataLoader(train_set, batch_size=5, shuffle=True, drop_last=True)
+test_loader = DataLoader(test_set, batch_size=5, shuffle=True, drop_last=True)
 
 print("train len:", len(train_loader))
 print("test len:", len(test_loader))
 
-net = ColorClassifier(dataset.vocab_size)
+model = get_model(dataset.vocab_size)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(net.parameters(), lr=0.005)
+optimizer = optim.Adam(model.parameters(), lr=0.005)
 
 
 def corrects(outputs, labels):
@@ -55,6 +63,7 @@ def corrects(outputs, labels):
         gt = np.argmax(labels, axis=1)
         return sum(pred == gt).item()
 
+
 def overview(inputs, outputs, labels):
     for image, output, label in zip(inputs, outputs, labels):
         image_disp = squeeze(image)
@@ -62,9 +71,10 @@ def overview(inputs, outputs, labels):
         image_disp = hsv_to_rgb(image_disp)
         plt.imshow(image_disp)
         plt.show()
-        print('GT: ', dataset.decode(label))
-        print('Prediction: ', dataset.decode(output == np.max(output.numpy())))
+        print("GT: ", dataset.decode(label))
+        print("Prediction: ", dataset.decode(output == np.max(output.numpy())))
         input()
+
 
 for epoch in range(200):
     train_loss = 0.0
@@ -72,7 +82,7 @@ for epoch in range(200):
     for i, data in enumerate(train_loader, 0):
         inputs, labels = data
         optimizer.zero_grad()
-        outputs = net(inputs)
+        outputs = model(inputs)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -86,7 +96,7 @@ for epoch in range(200):
     with torch.no_grad():
         for batch, data in enumerate(test_loader):
             inputs, labels = data
-            outputs = net(inputs)
+            outputs = model(inputs)
             test_loss += criterion(outputs, labels).item()
             test_corrects += corrects(outputs, labels)
             # if epoch % 10 == 0 and batch in [0, 1, 2]:
