@@ -15,18 +15,23 @@ from torchvision.transforms import Resize, transforms, CenterCrop, Lambda
 from kornia.color.hsv import RgbToHsv
 
 
-def scale_h(image):
+def scale_hue(image):
+    """
+    RgbToHsv in kornia package scales hue to [0, 2pi],
+    here is scaled to [0, 1].
+    """
     image[0] /= 2 * math.pi
     return image
 
 dataset = ImageDataset(
     transform=transforms.Compose(
         [
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomVerticalFlip(),
             Resize((32, 32)),
             transforms.ConvertImageDtype(torch.float),
-            #CenterCrop(48),
             RgbToHsv(),
-            Lambda(lambd=scale_h)
+            Lambda(lambd=scale_hue)
         ]
     )
 )
@@ -84,8 +89,8 @@ for epoch in range(200):
             outputs = net(inputs)
             test_loss += criterion(outputs, labels).item()
             test_corrects += corrects(outputs, labels)
-            if epoch % 10 == 0 and batch in [0, 1, 2]:
-                overview(inputs, outputs, labels)
+            # if epoch % 10 == 0 and batch in [0, 1, 2]:
+            #     overview(inputs, outputs, labels)
     test_loss /= len(test_loader)
     test_corrects /= 5 * len(test_loader)
 
