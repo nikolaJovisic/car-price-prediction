@@ -26,6 +26,9 @@ def get_resnet18(outputs_size):
     for param in model.parameters():
         param.requires_grad = False
 
+    for param in model.layer4.parameters():
+        param.requires_grad = True
+
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, outputs_size)
     return model
