@@ -20,7 +20,12 @@ def _read_data():
             _, filename = os.path.split(path)
             number = filename.split(".")[0]
             image_paths.append(os.path.join(IMAGES, number))
-            labels.append(datapoint["dodatne informacije"]["boja"])
+            color = datapoint["dodatne informacije"]["boja"]
+            if color in ["srebrna", "siva"]:
+                color = "bela"
+            if color in ["braon"]:
+                color = "crna"
+            labels.append(color)
     return image_paths, labels
 
 

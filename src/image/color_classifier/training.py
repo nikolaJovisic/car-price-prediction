@@ -39,7 +39,7 @@ test_loader = DataLoader(test_set, batch_size=5, shuffle=True)
 print("train len:", len(train_loader))
 print("test len:", len(test_loader))
 
-net = ColorClassifier()
+net = ColorClassifier(dataset.vocab_size)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 

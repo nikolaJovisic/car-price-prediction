@@ -7,11 +7,11 @@ from torch import squeeze, transpose
 
 
 class ColorClassifier(nn.Module):
-    def __init__(self):
+    def __init__(self, outputs):
         super().__init__()
         self.conv = nn.Conv2d(3, 3, 5)
         self.pool = nn.MaxPool2d(6, 6)
-        self.fc = nn.Linear(48, 18)
+        self.fc = nn.Linear(48, outputs)
 
     def forward(self, x):
         x = F.relu(self.conv(x))
