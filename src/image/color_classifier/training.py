@@ -41,7 +41,7 @@ print("test len:", len(test_loader))
 
 net = ColorClassifier(dataset.vocab_size)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.Adam(net.parameters(), lr=0.005)
 
 
 def corrects(outputs, labels):
@@ -84,7 +84,7 @@ for epoch in range(200):
             outputs = net(inputs)
             test_loss += criterion(outputs, labels).item()
             test_corrects += corrects(outputs, labels)
-            if epoch % 20 == batch == 0:
+            if epoch % 10 == 0 and batch in [0, 1, 2]:
                 overview(inputs, outputs, labels)
     test_loss /= len(test_loader)
     test_corrects /= 5 * len(test_loader)
