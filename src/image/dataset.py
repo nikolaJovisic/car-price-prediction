@@ -1,23 +1,28 @@
 import json
 import os
 
+import matplotlib.pyplot as plt
 import torch
+from matplotlib.colors import hsv_to_rgb
+from torch import squeeze, transpose
 from torch.utils.data import Dataset
 from torchvision.io import read_image
 
+
 def _read_data():
     ROOT = os.path.join(os.path.dirname(__file__), "../../data")
-    IMAGES = os.path.join(ROOT, 'images')
-    TEXTUAL = os.path.join(ROOT, 'textual')
+    IMAGES = os.path.join(ROOT, "images")
+    TEXTUAL = os.path.join(ROOT, "textual")
     image_paths, labels = [], []
     for path in os.scandir(TEXTUAL):
         with open(path) as file:
             datapoint = json.load(file)
             _, filename = os.path.split(path)
-            number = filename.split('.')[0]
+            number = filename.split(".")[0]
             image_paths.append(os.path.join(IMAGES, number))
             labels.append(datapoint["dodatne informacije"]["boja"])
     return image_paths, labels
+
 
 class ImageDataset(Dataset):
     def __init__(self, transform=None, target_transform=None):
@@ -31,10 +36,16 @@ class ImageDataset(Dataset):
         return len(self.img_labels)
 
     def __getitem__(self, idx):
-        image = read_image(os.path.join(self.img_paths[idx], '1.png'))
+        image = read_image(os.path.join(self.img_paths[idx], "1.png"))
         label = self.encode(self.img_labels[idx])
         if self.transform:
             image = self.transform(image)
+            # image_disp = squeeze(image)
+            # image_disp = transpose(image_disp, 0, 2)
+            # image_disp = hsv_to_rgb(image_disp)
+            # plt.imshow(image_disp)
+            # plt.show()
+            # input()
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
