@@ -22,6 +22,9 @@ train_transform = transforms.Compose([preprocessing, augmentation])
 
 dataset = ImageDataset()
 
+model_files_path = 'model_files'
+torch.save(dataset.vocab, os.path.join(model_files_path, 'vocab.pt'))
+
 train_set, validation_set, test_set = random_split(dataset, lengths=(0.65, 0.25, 0.1))
 
 train_set.dataset.transform = train_transform
@@ -44,7 +47,10 @@ def corrects(outputs, labels):
         gt = np.argmax(labels, axis=1)
         return sum(pred == gt).item()
 
-for epoch in range(2):
+
+best_accuracy = 0.0
+
+for epoch in range(100):
     train_loss = 0.0
     train_corrects = 0
     for i, data in enumerate(train_loader, 0):
@@ -67,10 +73,14 @@ for epoch in range(2):
             outputs = model(inputs)
             validation_loss += criterion(outputs, labels).item()
             validation_corrects += corrects(outputs, labels)
-            if epoch % 10 == 0 and batch in [0, 1, 2]:
-                overview(inputs, outputs, labels, dataset.vocab)
+            # if epoch % 10 == 0 and batch in [0, 1, 2]:
+            #     overview(inputs, outputs, labels, dataset.vocab)
     validation_loss /= len(validation_loader)
     validation_corrects /= 5 * len(validation_loader)
+    if validation_corrects > best_accuracy:
+        print(f'New best model, accuracy update: {best_accuracy} -> {validation_corrects}')
+        best_accuracy = validation_corrects
+        torch.save(model.state_dict(), os.path.join(model_files_path, 'model_state_dict.pt'))
 
     print(
         f"[{epoch + 1}] {train_loss:.3f}, {validation_loss:.3f}, {train_corrects:.3f}, {validation_corrects:.3f}"
@@ -79,9 +89,4 @@ for epoch in range(2):
 
 print("Finished Training")
 
-path = 'model_files'
-
-torch.save(dataset.vocab, os.path.join(path, 'vocab.pt'))
-torch.save(model.state_dict(), os.path.join(path, 'model_state_dict.pt'))
-
-inference_demo(path, test_set)
+inference_demo(model_files_path, test_set)
