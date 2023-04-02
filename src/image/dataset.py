@@ -1,12 +1,10 @@
 import json
 import os
 
-import matplotlib.pyplot as plt
-import torch
-from matplotlib.colors import hsv_to_rgb
-from torch import squeeze, transpose
 from torch.utils.data import Dataset
 from torchvision.io import read_image
+
+from image.utils import encode_one_hot, decode_one_hot
 
 
 def _read_data():
@@ -45,22 +43,12 @@ class ImageDataset(Dataset):
         label = self.encode(self.img_labels[idx])
         if self.transform:
             image = self.transform(image)
-            # image_disp = squeeze(image)
-            # image_disp = transpose(image_disp, 0, 2)
-            # image_disp = hsv_to_rgb(image_disp)
-            # plt.imshow(image_disp)
-            # plt.show()
-            # input()
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
 
     def encode(self, word):
-        one_hot = torch.zeros(self.vocab_size)
-        one_hot[self.vocab.index(word)] = 1
-        return one_hot
+        return encode_one_hot(self.vocab, word)
 
     def decode(self, one_hot):
-        one_hot = torch.squeeze(one_hot)
-        index = torch.where(one_hot == 1)[0]
-        return self.vocab[index]
+        return decode_one_hot(self.vocab, one_hot)
