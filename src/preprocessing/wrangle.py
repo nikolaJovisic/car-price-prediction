@@ -3,8 +3,8 @@ import os
 import pandas as pd
 import re
 
-from .model_mca import encode_columns
-from .utils import days_between
+from model_mca import encode_columns
+from utils import days_between
 
 SCRAPING_DAY_STR = "31.1.2023."
 SCRAPING_YEAR_INT = int(SCRAPING_DAY_STR.split(".")[-2])

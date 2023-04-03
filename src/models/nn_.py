@@ -8,7 +8,7 @@ import tqdm
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
-from preprocessing.wrangle import wrangle
+from ..preprocessing.wrangle import wrangle
 
 X, y = wrangle()
 

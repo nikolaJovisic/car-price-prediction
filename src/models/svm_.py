@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from src.preprocessing.wrangle import wrangle
+from ..preprocessing.wrangle import wrangle
 from sklearn.svm import SVR
 
 x, y = wrangle()

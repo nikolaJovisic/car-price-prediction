@@ -4,7 +4,7 @@ import os
 from torch.utils.data import Dataset
 from torchvision.io import read_image
 
-from image.utils import encode_one_hot, decode_one_hot
+from utils import encode_one_hot, decode_one_hot
 
 
 def _read_data():

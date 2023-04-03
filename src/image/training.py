@@ -4,15 +4,15 @@ import numpy as np
 import torch
 import torch.optim as optim
 
-from image.inference import inference_demo
-from image.model import get_model
-from image.dataset import ImageDataset
+from inference import inference_demo
+from model import get_model
+from dataset import ImageDataset
 from torch import nn
 from torch.utils.data import DataLoader, random_split
 from torchvision.transforms import transforms
 
-from image.preprocessing import preprocessing
-from image.utils import overview
+from preprocessing import preprocessing
+from utils import overview
 
 augmentation = transforms.Compose(
     [transforms.RandomHorizontalFlip(), transforms.RandomVerticalFlip()]
