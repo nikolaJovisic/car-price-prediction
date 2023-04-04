@@ -11,24 +11,24 @@ from sklearn.model_selection import train_test_split
 
 from preprocessing.wrangle import wrangle
 
-X, y = wrangle()
+x, y = wrangle()
 
 # train-test split for model evaluation
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, shuffle=True)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, shuffle=True)
 
-x_scaler = preprocessing.MinMaxScaler().fit(X_train)
-x_train = x_scaler.transform(X_train)
-x_test = x_scaler.transform(X_test)
+x_scaler = preprocessing.MinMaxScaler().fit(x_train)
+x_train = x_scaler.transform(x_train)
+x_test = x_scaler.transform(x_test)
 
-X_train = X_train.values.astype(np.float32)
-X_test = X_test.values.astype(np.float32)
+x_train = x_train.astype(np.float32)
+x_test = x_test.astype(np.float32)
 y_train = y_train.values.astype(np.float32)
 y_test = y_test.values.astype(np.float32)
 
 # Convert to 2D PyTorch tensors
-X_train = torch.from_numpy(X_train)
+x_train = torch.from_numpy(x_train)
 y_train = torch.from_numpy(y_train).reshape(-1, 1)
-X_test = torch.from_numpy(X_test)
+x_test = torch.from_numpy(x_test)
 y_test = torch.from_numpy(y_test).reshape(-1, 1)
 
 # Define the model
@@ -48,7 +48,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
 n_epochs = 100  # number of epochs to run
 batch_size = 30  # size of each batch
-batch_start = torch.arange(0, len(X_train), batch_size)
+batch_start = torch.arange(0, len(x_train), batch_size)
 
 # Hold the best model
 best_mse = np.inf  # init to infinity
@@ -62,7 +62,7 @@ for epoch in range(n_epochs):
         bar.set_description(f"Epoch {epoch}")
         for start in bar:
             # take a batch
-            X_batch = X_train[start : start + batch_size]
+            X_batch = x_train[start: start + batch_size]
             y_batch = y_train[start : start + batch_size]
             # forward pass
             y_pred = model(X_batch)
@@ -76,7 +76,7 @@ for epoch in range(n_epochs):
             bar.set_postfix(mse=float(loss))
     # evaluate accuracy at end of each epoch
     model.eval()
-    y_pred = model(X_test)
+    y_pred = model(x_test)
     mse = loss_fn(y_pred, y_test)
     mse = float(mse)
     history.append(mse)
