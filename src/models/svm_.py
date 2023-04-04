@@ -2,22 +2,31 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
+from sklearn.model_selection import GridSearchCV
 
 from preprocessing.wrangle import wrangle
 
-x, y = wrangle()
+X, y = wrangle()
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8)
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, shuffle=False)
 
-x_scaler = preprocessing.MinMaxScaler().fit(x_train)
-x_train = x_scaler.transform(x_train)
-x_test = x_scaler.transform(x_test)
+X_scaler = preprocessing.MinMaxScaler().fit(X_train)
+X_train = X_scaler.transform(X_train)
+X_test = X_scaler.transform(X_test)
 
 y_train = np.log(y_train)
 
-model = SVR(C=50.0, degree=10)
-model.fit(x_train, y_train)
-pred = model.predict(x_test)
+param_grid = {'C': [0.1, 1, 10, 100, 1000],
+              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+              'kernel': ['poly'],
+              'degree': [3, 5, 10]}
+
+grid = GridSearchCV(SVR(), param_grid, refit=True, verbose=3)
+grid.fit(X_train, y_train)
+pred = grid.predict(X_test)
+
+print('Best parameters: ', grid.best_params_)
+print('Best estimator: ', grid.best_estimator_)
 
 pred = np.exp(pred)
 
