@@ -15,13 +15,11 @@ x_test = x_scaler.transform(x_test)
 
 y_train = np.log(y_train)
 
-
 model = SVR(C=50.0, degree=10)
 model.fit(x_train, y_train)
-pred = model.predict(x_train)
-
+pred = model.predict(x_test)
 
 pred = np.exp(pred)
 
-diff = abs(pred - y_train)
+diff = abs(pred - y_test)
 print("Acceptable results percentage:", 100 * sum(diff < 100) / len(diff))
