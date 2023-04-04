@@ -11,15 +11,10 @@ def preliminary_classification():
     """
     :returns: x_cheap, y_cheap, x_mid, y_mid, x_expensive, y_expensive
     """
-    vocab = ['cheap', 'mid', 'expensive']
-
     x, y_unbucketed = wrangle()
 
-    y = np.zeros(len(y_unbucketed))
-
-    y[y_unbucketed <= 10_000] = vocab.index('cheap')
-    y[np.logical_and(10_000 < y_unbucketed, y_unbucketed <= 20_000)] = vocab.index('mid')
-    y[20_000 < y_unbucketed] = vocab.index('expensive')
+    bins = [0, 10_000, 20_000, float('inf')]
+    y = pd.cut(y_unbucketed, bins=bins, labels=False)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8)
 
@@ -33,9 +28,9 @@ def preliminary_classification():
     y_pred = classifier.predict(x_test)
     print(pd.crosstab(y_test, y_pred, rownames=['Actual'], colnames=['Predicted']))
 
-    cheap_idxs, = np.where(y == vocab.index('cheap'))
-    mid_idxs, = np.where(y == vocab.index('mid'))
-    expensive_idxs, = np.where(y == vocab.index('expensive'))
+    cheap_idxs, = np.where(y == 0)
+    mid_idxs, = np.where(y == 1)
+    expensive_idxs, = np.where(y == 2)
 
     x_cheap, y_cheap = x.iloc[cheap_idxs], y_unbucketed.iloc[cheap_idxs]
     x_mid, y_mid = x.iloc[mid_idxs], y_unbucketed.iloc[mid_idxs]
