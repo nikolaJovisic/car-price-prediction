@@ -26,7 +26,7 @@ def _fit(df: pd.DataFrame):
     :return: Fitted MCA model.
     """
     rank = np.linalg.matrix_rank(df)
-    mca = prince.MCA(n_components=rank-1)
+    mca = prince.MCA(n_components=rank - 1)
     return mca.fit(df)
 
 

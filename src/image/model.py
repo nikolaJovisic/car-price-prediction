@@ -18,6 +18,7 @@ class ColorClassifier(nn.Module):
         x = F.relu(self.fc(x))
         return x
 
+
 def get_resnet18(outputs_size):
     model = resnet18(pretrained=True)
     for param in model.parameters():
@@ -30,6 +31,7 @@ def get_resnet18(outputs_size):
     model.fc = nn.Linear(num_ftrs, outputs_size)
     return model
 
+
 def get_model(outputs_size):
-    #return ColorClassifier(outputs_size)
+    # return ColorClassifier(outputs_size)
     return get_resnet18(outputs_size)

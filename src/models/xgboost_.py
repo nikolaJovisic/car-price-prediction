@@ -1,9 +1,9 @@
 import numpy as np
+import xgboost as xgb
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from ..preprocessing.wrangle import wrangle
-import xgboost as xgb
 
+from preprocessing.wrangle import wrangle
 
 x, y = wrangle()
 
@@ -18,15 +18,15 @@ y_train = np.log(y_train)
 dtrain = xgb.DMatrix(x_train, label=y_train)
 dtest = xgb.DMatrix(x_test, label=y_test)
 
-param = {'max_depth': 150, 'eta': 1, 'objective': 'reg:squarederror'}
-param['nthread'] = 4
-evallist = [(dtrain, 'train'), (dtest, 'eval')]
+param = {"max_depth": 150, "eta": 1, "objective": "reg:squarederror"}
+param["nthread"] = 4
+evallist = [(dtrain, "train"), (dtest, "eval")]
 
 bst = xgb.train(param, dtrain, 10, evallist)
 y = bst.predict(dtest)
 y = np.exp(y)
 
 diff = abs(y - y_test)
-print('Acceptable results percentage:', 100*sum(diff < 100)/len(diff))
+print("Acceptable results percentage:", 100 * sum(diff < 100) / len(diff))
 
 print()

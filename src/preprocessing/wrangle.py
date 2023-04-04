@@ -1,13 +1,15 @@
 import json
 import os
-import pandas as pd
 import re
 
-from model_mca import encode_columns
-from utils import days_between
+import pandas as pd
+
+from preprocessing.model_mca import encode_columns
+from preprocessing.utils import days_between
 
 SCRAPING_DAY_STR = "31.1.2023."
 SCRAPING_YEAR_INT = int(SCRAPING_DAY_STR.split(".")[-2])
+
 
 def wrangle():
     """
@@ -30,7 +32,7 @@ def wrangle():
 
     df = df[
         df["stanje:"] == "polovno vozilo"
-        ]  # very dominant class, only one worth keeping
+    ]  # very dominant class, only one worth keeping
 
     df.drop(
         columns=[
@@ -64,14 +66,18 @@ def wrangle():
     df["broj vrata"] = df["broj vrata"].map(lambda doors: int(doors == "4/5 vrata"))
     df.rename(columns={"broj vrata": "4/5 vrata"}, inplace=True)
 
-    df["strana volana"] = df["strana volana"].map(lambda wheel: int(wheel == "levi volan"))
+    df["strana volana"] = df["strana volana"].map(
+        lambda wheel: int(wheel == "levi volan")
+    )
     df.rename(columns={"strana volana": "levi volan"}, inplace=True)
 
     df["kilometraza"] = df["kilometraza"].map(
         lambda distance: int(re.sub("[^0-9]", "", distance))
     )
 
-    df["kubikaza"] = df["kubikaza"].map(lambda volume: int(re.sub("[^0-9]", "", volume)))
+    df["kubikaza"] = df["kubikaza"].map(
+        lambda volume: int(re.sub("[^0-9]", "", volume))
+    )
 
     df["snaga motora"] = df["snaga motora"].map(
         lambda power: int(power.split("/")[0])
@@ -90,12 +96,27 @@ def wrangle():
         lambda euro: int(euro[-1]) if isinstance(euro, str) else 4
     )
 
-    df = encode_columns(df,
-                        ["marka", "model", "karoserija", "gorivo", "fiksna cena", "zamena:", "pogon", "menjac", "klima",
-                         "materijal enterijera", "poreklo vozila", "zemlja uvoza", "boja"])
+    df = encode_columns(
+        df,
+        [
+            "marka",
+            "model",
+            "karoserija",
+            "gorivo",
+            "fiksna cena",
+            "zamena:",
+            "pogon",
+            "menjac",
+            "klima",
+            "materijal enterijera",
+            "poreklo vozila",
+            "zemlja uvoza",
+            "boja",
+        ],
+    )
 
-    label = df.pop('cena')
-    df['cena'] = label
+    label = df.pop("cena")
+    df["cena"] = label
 
     df.columns = df.columns.astype(str)
 
@@ -110,5 +131,5 @@ def main():
     print(df)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

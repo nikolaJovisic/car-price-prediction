@@ -1,8 +1,9 @@
 import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from ..preprocessing.wrangle import wrangle
 from sklearn.svm import SVR
+
+from preprocessing.wrangle import wrangle
 
 x, y = wrangle()
 
@@ -23,4 +24,4 @@ pred = model.predict(x_train)
 pred = np.exp(pred)
 
 diff = abs(pred - y_train)
-print('Acceptable results percentage:', 100*sum(diff < 100)/len(diff))
+print("Acceptable results percentage:", 100 * sum(diff < 100) / len(diff))

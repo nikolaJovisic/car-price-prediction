@@ -1,4 +1,5 @@
 import copy
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -8,7 +9,7 @@ import tqdm
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
-from ..preprocessing.wrangle import wrangle
+from preprocessing.wrangle import wrangle
 
 X, y = wrangle()
 
@@ -38,7 +39,7 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(100, 6),
     nn.ReLU(),
-    nn.Linear(6, 1)
+    nn.Linear(6, 1),
 )
 
 # loss function and optimizer
@@ -61,8 +62,8 @@ for epoch in range(n_epochs):
         bar.set_description(f"Epoch {epoch}")
         for start in bar:
             # take a batch
-            X_batch = X_train[start:start + batch_size]
-            y_batch = y_train[start:start + batch_size]
+            X_batch = X_train[start : start + batch_size]
+            y_batch = y_train[start : start + batch_size]
             # forward pass
             y_pred = model(X_batch)
             loss = loss_fn(y_pred, y_batch)

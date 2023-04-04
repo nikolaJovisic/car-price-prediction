@@ -1,5 +1,4 @@
 from datetime import datetime
-from math import isnan
 
 
 def days_between(start_date, end_date):

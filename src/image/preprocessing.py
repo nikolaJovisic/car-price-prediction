@@ -3,7 +3,8 @@ import math
 import torch
 from kornia.color import RgbToHsv
 from torchvision import transforms
-from torchvision.transforms import Resize, Lambda
+from torchvision.transforms import Lambda, Resize
+
 
 def scale_hue(image):
     """
@@ -12,6 +13,7 @@ def scale_hue(image):
     """
     image[0] /= 2 * math.pi
     return image
+
 
 preprocessing = transforms.Compose(
     [

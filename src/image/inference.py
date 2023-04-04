@@ -3,17 +3,17 @@ import os
 import torch
 from torch.utils.data import DataLoader
 
-from model import get_model
-from preprocessing import preprocessing
-from utils import overview
+from image.model import get_model
+from image.preprocessing import preprocessing
+from image.utils import overview
 
 
 def inference_demo(path, test_dataset):
-    vocab = torch.load(os.path.join(path, 'vocab.pt'))
+    vocab = torch.load(os.path.join(path, "vocab.pt"))
     vocab_size = len(vocab)
 
     model = get_model(vocab_size)
-    model.load_state_dict(torch.load(os.path.join(path, 'model_state_dict.pt')))
+    model.load_state_dict(torch.load(os.path.join(path, "model_state_dict.pt")))
     model.eval()
 
     test_dataset.dataset.transform = preprocessing
@@ -24,5 +24,3 @@ def inference_demo(path, test_dataset):
         inputs, labels = data
         outputs = model(inputs)
         overview(inputs, outputs, labels, vocab)
-
-
