@@ -3,6 +3,7 @@ import os
 import re
 
 import pandas as pd
+from matplotlib import pyplot as plt
 
 from preprocessing.model_mca import encode_columns
 from preprocessing.utils import days_between
@@ -122,6 +123,9 @@ def wrangle():
 
     x = df.iloc[:, 0:-1]
     y = df.iloc[:, -1]
+
+    plt.hist(y, bins=100)
+    plt.show()
 
     return x, y
 
