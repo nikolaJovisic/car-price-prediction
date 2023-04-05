@@ -18,11 +18,10 @@ y_train = np.log(y_train)
 dtrain = xgb.DMatrix(x_train, label=y_train)
 dtest = xgb.DMatrix(x_test, label=y_test)
 
-param = {"max_depth": 150, "eta": 1, "objective": "reg:squarederror"}
-param["nthread"] = 4
+param = {"max_depth": 6, "eta": 0.2, "objective": "reg:squarederror", "nthread": 4}
 evallist = [(dtrain, "train"), (dtest, "eval")]
 
-bst = xgb.train(param, dtrain, 10, evallist)
+bst = xgb.train(param, dtrain, 100, evallist)
 y = bst.predict(dtest)
 y = np.exp(y)
 
