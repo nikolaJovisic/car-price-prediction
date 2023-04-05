@@ -8,15 +8,15 @@ import torch.nn as nn
 import torch.optim as optim
 import tqdm
 from sklearn import preprocessing
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split
 
-from classification_approach.bounds import B0
+from classification_approach.constants import PB0, PB1, BS, PB2
 from classification_approach.preliminary_classification import preliminary_classification
 
-x, y, _, _, _, _ = preliminary_classification()
+_, _, _, _, x, y = preliminary_classification()
 
-bins = [*range(0, B0 + 1000, 1000)]
+bins = [*range(PB1, PB2 + BS, BS)]
 y = pd.cut(y, bins=bins, labels=False)
 y = pd.get_dummies(y)
 
@@ -41,14 +41,14 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(300, 100),
     nn.ReLU(),
-    nn.Linear(100, 9),
+    nn.Linear(100, y.shape[1]),
 )
 
 
 loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-n_epochs = 250
+n_epochs = 350
 batch_size = 30
 batch_start = torch.arange(0, len(x_train), batch_size)
 
@@ -87,8 +87,9 @@ y_pred = model(x_test)
 
 _, y_pred = y_pred.max(dim=1)
 y_true = y_test.argmax(dim=1)
-conf_mat = confusion_matrix(y_true, y_pred)
-print(conf_mat)
+# conf_mat = confusion_matrix(y_true, y_pred)
+report = classification_report(y_true, y_pred)
+print(report)
 
 
 plt.plot(history)

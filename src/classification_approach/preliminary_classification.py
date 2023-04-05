@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
-from classification_approach.bounds import B0, B1
+from classification_approach.constants import PB0, PB1
 from preprocessing.wrangle import wrangle
 
 
@@ -14,7 +14,7 @@ def preliminary_classification():
     """
     x, y_unbucketed = wrangle()
 
-    bins = [0, B0, B1, float('inf')]
+    bins = [0, PB0, PB1, float('inf')]
     y = pd.cut(y_unbucketed, bins=bins, labels=False)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8)
