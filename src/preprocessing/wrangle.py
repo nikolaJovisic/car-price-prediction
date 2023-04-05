@@ -7,6 +7,8 @@ import pandas as pd
 from preprocessing.model_mca import encode_columns
 from preprocessing.utils import days_between
 
+from regression_approach.eda import show_heatmap, show_occurrence_frequencies
+
 SCRAPING_DAY_STR = "31.1.2023."
 SCRAPING_YEAR_INT = int(SCRAPING_DAY_STR.split(".")[-2])
 
@@ -59,6 +61,8 @@ def wrangle():
         ],
         inplace=True,
     )
+
+    show_occurrence_frequencies(df)
 
     df["godiste"] = df["godiste"].map(lambda year: SCRAPING_YEAR_INT - int(year[:-1]))
     df.rename(columns={"godiste": "starost"}, inplace=True)
@@ -114,6 +118,9 @@ def wrangle():
             "boja",
         ],
     )
+
+    df_min = df.iloc[:, :12]
+    show_heatmap(df_min)
 
     label = df.pop("cena")
     df["cena"] = label
