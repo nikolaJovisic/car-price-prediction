@@ -5,6 +5,7 @@ import re
 import pandas as pd
 from matplotlib import pyplot as plt
 
+from classification_approach.constants import PB2
 from preprocessing.model_mca import encode_columns
 from preprocessing.utils import days_between
 
@@ -115,6 +116,10 @@ def wrangle():
             "boja",
         ],
     )
+
+    df = df[
+        df["cena"] < PB2
+        ]
 
     label = df.pop("cena")
     df["cena"] = label
