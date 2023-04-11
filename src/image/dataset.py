@@ -17,13 +17,14 @@ def _read_data():
             datapoint = json.load(file)
             _, filename = os.path.split(path)
             number = filename.split(".")[0]
-            image_paths.append(os.path.join(IMAGES, number))
             color = datapoint["dodatne informacije"]["boja"]
-            if color in ["srebrna", "siva"]:
-                color = "bela"
-            if color in ["braon"]:
-                color = "crna"
-            labels.append(color)
+            for image_path in os.scandir(os.path.join(IMAGES, number)):
+                image_paths.append(image_path.path)
+                labels.append(color)
+            # if color in ["srebrna", "siva"]:
+            #     color = "bela"
+            # if color in ["braon"]:
+            #     color = "crna"
     return image_paths, labels
 
 
@@ -39,7 +40,7 @@ class ImageDataset(Dataset):
         return len(self.img_labels)
 
     def __getitem__(self, idx):
-        image = read_image(os.path.join(self.img_paths[idx], "1.png"))
+        image = read_image(self.img_paths[idx])
         label = self.encode(self.img_labels[idx])
         if self.transform:
             image = self.transform(image)

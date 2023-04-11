@@ -25,20 +25,22 @@ dataset = ImageDataset()
 model_files_path = 'model_files'
 torch.save(dataset.vocab, os.path.join(model_files_path, 'vocab.pt'))
 
-train_set, validation_set, test_set = random_split(dataset, lengths=(0.65, 0.25, 0.1))
+train_set, validation_set, test_set, _ = random_split(dataset, lengths=(0.065, 0.025, 0.01, 0.9))
 
-train_set.dataset.transform = train_transform
+train_set.dataset.transform = preprocessing #train_transform
 validation_set.dataset.transform = preprocessing
 
-train_loader = DataLoader(train_set, batch_size=5, shuffle=True, drop_last=True)
-validation_loader = DataLoader(validation_set, batch_size=5, shuffle=True, drop_last=True)
+batch_size = 25
+
+train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, drop_last=True)
+validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=True, drop_last=True)
 
 print("train len:", len(train_loader))
 print("test len:", len(validation_loader))
 
 model = get_model(dataset.vocab_size)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.005)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
 
 def corrects(outputs, labels):
@@ -50,7 +52,7 @@ def corrects(outputs, labels):
 
 best_accuracy = 0.0
 
-for epoch in range(100):
+for epoch in range(5000):
     train_loss = 0.0
     train_corrects = 0
     for i, data in enumerate(train_loader, 0):
@@ -63,7 +65,7 @@ for epoch in range(100):
         train_corrects += corrects(outputs, labels)
         train_loss += loss.item()
     train_loss /= len(train_loader)
-    train_corrects /= 5 * len(train_loader)
+    train_corrects /= batch_size * len(train_loader)
 
     validation_loss = 0.0
     validation_corrects = 0
@@ -76,7 +78,7 @@ for epoch in range(100):
             # if epoch % 10 == 0 and batch in [0, 1, 2]:
             #     overview(inputs, outputs, labels, dataset.vocab)
     validation_loss /= len(validation_loader)
-    validation_corrects /= 5 * len(validation_loader)
+    validation_corrects /= batch_size * len(validation_loader)
     if validation_corrects > best_accuracy:
         print(f'New best model, accuracy update: {best_accuracy} -> {validation_corrects}')
         best_accuracy = validation_corrects
