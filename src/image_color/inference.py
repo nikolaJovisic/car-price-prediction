@@ -3,9 +3,9 @@ import os
 import torch
 from torch.utils.data import DataLoader
 
-from image.model import get_model
-from image.preprocessing import preprocessing
-from image.utils import overview
+from image_color.model import get_model
+from image_color.preprocessing import preprocessing
+from image_color.utils import overview
 
 
 def inference_demo(path, test_dataset):

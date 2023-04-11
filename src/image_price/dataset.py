@@ -4,8 +4,6 @@ import os
 from torch.utils.data import Dataset
 from torchvision.io import read_image
 
-from image.utils import encode_one_hot, decode_one_hot
-
 
 def _read_data():
     ROOT = os.path.join(os.path.dirname(__file__), "../../data")
@@ -17,22 +15,16 @@ def _read_data():
             datapoint = json.load(file)
             _, filename = os.path.split(path)
             number = filename.split(".")[0]
-            label = datapoint["dodatne informacije"]["boja"]
+            label = datapoint["cena"]
             for image_path in os.scandir(os.path.join(IMAGES, number)):
                 image_paths.append(image_path.path)
                 labels.append(label)
-            # if color in ["srebrna", "siva"]:
-            #     color = "bela"
-            # if color in ["braon"]:
-            #     color = "crna"
     return image_paths, labels
 
 
 class ImageDataset(Dataset):
     def __init__(self, transform=None, target_transform=None):
         self.img_paths, self.img_labels = _read_data()
-        self.vocab = list(set(self.img_labels))
-        self.vocab_size = len(self.vocab)
         self.transform = transform
         self.target_transform = target_transform
 
@@ -41,15 +33,9 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, idx):
         image = read_image(self.img_paths[idx])
-        label = self.encode(self.img_labels[idx])
+        label = self.img_labels[idx]
         if self.transform:
             image = self.transform(image)
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
-
-    def encode(self, word):
-        return encode_one_hot(self.vocab, word)
-
-    def decode(self, one_hot):
-        return decode_one_hot(self.vocab, one_hot)

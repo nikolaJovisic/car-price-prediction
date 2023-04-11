@@ -34,7 +34,7 @@ def scrape() -> None:
     for i in range(40):
         cars = driver.find_elements(
             By.XPATH,
-            "//article[contains(concat(' ', @class, ' '), ' classified ')]//div[@class='image']/child::a",
+            "//article[contains(concat(' ', @class, ' '), ' classified ')]//div[@class='image_color']/child::a",
         )
         for car in cars:
             car_number += 1
