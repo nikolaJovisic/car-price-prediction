@@ -17,10 +17,10 @@ def _read_data():
             datapoint = json.load(file)
             _, filename = os.path.split(path)
             number = filename.split(".")[0]
-            color = datapoint["dodatne informacije"]["boja"]
+            label = datapoint["dodatne informacije"]["boja"]
             for image_path in os.scandir(os.path.join(IMAGES, number)):
                 image_paths.append(image_path.path)
-                labels.append(color)
+                labels.append(label)
             # if color in ["srebrna", "siva"]:
             #     color = "bela"
             # if color in ["braon"]:
