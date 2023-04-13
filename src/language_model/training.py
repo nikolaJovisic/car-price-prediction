@@ -7,6 +7,7 @@ from language_model.model import LSTM
 from language_model.preprocessing import text_pipeline, create_vocab
 
 from datetime import datetime
+from transformers import AutoModelForSequenceClassification, BertForSequenceClassification
 
 
 def collate_batch(batch):
@@ -39,7 +40,12 @@ def train(dataloader):
         # for text in text_batch:
         #     print(' '.join(vocab_.get_itos()[t] for t in text))
         optimizer.zero_grad()
-        pred = model(text_batch, lengths)[:, 0]
+        if isinstance(model, BertForSequenceClassification):
+            if text_batch.shape[1] > 512:
+                text_batch = torch.stack([text[:512] for text in text_batch])
+            pred = model(text_batch).logits[:, 0]
+        else:
+            pred = model(text_batch, lengths)[:, 0]
         loss = loss_fn(pred, label_batch)
         loss.backward()
         optimizer.step()
@@ -53,7 +59,12 @@ def evaluate(dataloader):
     total_acc, total_loss = 0, 0
     with torch.no_grad():
         for text_batch, label_batch, lengths in dataloader:
-            pred = model(text_batch, lengths)[:, 0]
+            if isinstance(model, BertForSequenceClassification):
+                if text_batch.shape[1] > 512:
+                    text_batch = torch.stack([text[:512] for text in text_batch])
+                pred = model(text_batch).logits[:, 0]
+            else:
+                pred = model(text_batch, lengths)[:, 0]
             loss = loss_fn(pred, label_batch)
             total_acc += (abs(pred - label_batch) < 100).sum().item()
             total_loss += loss.item() * label_batch.size(0)
@@ -92,7 +103,8 @@ test_loader = DataLoader(
 )
 
 # Create model
-model = LSTM(embedding_dim=embed_dim, hidden_dim=rnn_hidden_size, vocab_size=vocab_size)
+# model = LSTM(embedding_dim=embed_dim, hidden_dim=rnn_hidden_size, vocab_size=vocab_size)
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-multilingual-cased")
 model = model.to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
 loss_fn = nn.MSELoss()
