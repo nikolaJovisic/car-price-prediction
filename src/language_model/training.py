@@ -106,7 +106,7 @@ test_loader = DataLoader(
 # model = LSTM(embedding_dim=embed_dim, hidden_dim=rnn_hidden_size, vocab_size=vocab_size)
 model = AutoModelForSequenceClassification.from_pretrained("bert-base-multilingual-cased")
 model = model.to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
+optimizer = torch.optim.AdamW(model.parameters(), lr=0.001)
 loss_fn = nn.MSELoss()
 print("Model:", model)
 
