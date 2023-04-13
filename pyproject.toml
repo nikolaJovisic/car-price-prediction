@@ -19,6 +19,7 @@ torch = "^2.0.0"
 torchvision = "^0.15.1"
 kornia = "^0.6.11"
 torchtext = "^0.15.1"
+transformers = "^4.28.0"
 
 
 [build-system]
