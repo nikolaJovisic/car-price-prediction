@@ -23,8 +23,8 @@ def wrangle():
             data.append(
                 datum["opste informacije"]
                 | datum["dodatne informacije"]
-                | {"sigurnost": len(datum["sigurnost"])}
-                | {"oprema": len(datum["oprema"])}
+                # | {"sigurnost": len(datum["sigurnost"])}
+                # | {"oprema": len(datum["oprema"])}
                 | {"cena": datum["cena"]}
             )
 
@@ -56,6 +56,27 @@ def wrangle():
             "nacin prodaje",
             "u ponudi od:",
             "boja enterijera",
+            # "karoserija",
+            # "gorivo",
+            # "fiksna cena",
+            # "zamena:",
+            # "pogon",
+            # "menjac",
+            # "klima",
+            # "materijal enterijera",
+            # "poreklo vozila",
+            # "zemlja uvoza",
+            # "boja",
+            "broj vrata",
+            "strana volana",
+            "kubikaza",
+            "broj sedista",
+            "registrovan do",
+            "emisiona klasa motora",
+            # "marka",
+            # "model",
+            "kapacitet baterije",
+            "domet sa punom baterijom (km)"
         ],
         inplace=True,
     )
@@ -63,38 +84,38 @@ def wrangle():
     df["godiste"] = df["godiste"].map(lambda year: SCRAPING_YEAR_INT - int(year[:-1]))
     df.rename(columns={"godiste": "starost"}, inplace=True)
 
-    df["broj vrata"] = df["broj vrata"].map(lambda doors: int(doors == "4/5 vrata"))
-    df.rename(columns={"broj vrata": "4/5 vrata"}, inplace=True)
-
-    df["strana volana"] = df["strana volana"].map(
-        lambda wheel: int(wheel == "levi volan")
-    )
-    df.rename(columns={"strana volana": "levi volan"}, inplace=True)
+    # df["broj vrata"] = df["broj vrata"].map(lambda doors: int(doors == "4/5 vrata"))
+    # df.rename(columns={"broj vrata": "4/5 vrata"}, inplace=True)
+    #
+    # df["strana volana"] = df["strana volana"].map(
+    #     lambda wheel: int(wheel == "levi volan")
+    # )
+    # df.rename(columns={"strana volana": "levi volan"}, inplace=True)
 
     df["kilometraza"] = df["kilometraza"].map(
         lambda distance: int(re.sub("[^0-9]", "", distance))
     )
 
-    df["kubikaza"] = df["kubikaza"].map(
-        lambda volume: int(re.sub("[^0-9]", "", volume))
-    )
+    # df["kubikaza"] = df["kubikaza"].map(
+    #     lambda volume: int(re.sub("[^0-9]", "", volume))
+    # )
 
     df["snaga motora"] = df["snaga motora"].map(
         lambda power: int(power.split("/")[0])
     )  # only one unit (kw) is needed
 
-    df["broj sedista"] = df["broj sedista"].map(lambda seats: int(seats.split(" ")[0]))
+    # df["broj sedista"] = df["broj sedista"].map(lambda seats: int(seats.split(" ")[0]))
 
-    df["registrovan do"] = df["registrovan do"].map(
-        lambda date: 0
-        if date == "nije registrovan"
-        else max(0, days_between(SCRAPING_DAY_STR, f"{15.}{date}"))
-    )
-    df.rename(columns={"registrovan do": "registrovan dana"}, inplace=True)
+    # df["registrovan do"] = df["registrovan do"].map(
+    #     lambda date: 0
+    #     if date == "nije registrovan"
+    #     else max(0, days_between(SCRAPING_DAY_STR, f"{15.}{date}"))
+    # )
+    # df.rename(columns={"registrovan do": "registrovan dana"}, inplace=True)
 
-    df["emisiona klasa motora"] = df["emisiona klasa motora"].map(
-        lambda euro: int(euro[-1]) if isinstance(euro, str) else 4
-    )
+    # df["emisiona klasa motora"] = df["emisiona klasa motora"].map(
+    #     lambda euro: int(euro[-1]) if isinstance(euro, str) else 4
+    # )
 
     df = encode_columns(
         df,
